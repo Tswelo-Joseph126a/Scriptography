@@ -1,0 +1,46 @@
+local allPlayers = {} -- This table will hold all the players info in the server.
+
+function addPlayer(player) -- This function adds a players info to the table.
+	local playerTable = {
+		Name = player.Name,
+		Age = math.floor(player.AccountAge / 365), -- This gives the player's account age in years.
+		Level = math.random(1, 10),
+		Status = "Alive"
+	}
+	
+	table.insert(allPlayers, playerTable)
+end
+
+function removePlayer(player) -- This removes the players info from the table
+	for i, p in ipairs(allPlayers) do
+		if p.Name == player.Name then
+			table.remove(allPlayers, i)
+		end
+	end
+end
+
+function printSummary() -- This outputs a list of all the players info into the console
+	for i, p in ipairs(allPlayers) do
+		local currentKey = allPlayers[i]
+		local lbText = currentKey.Name .. " - " .. currentKey.Level
+		
+		print("Name: " .. currentKey.Name .. ", Age: " .. currentKey.Age
+			.. ", Level: " .. currentKey.Level .. ", Status: " .. currentKey.Status
+		)
+	end	
+end
+
+function updateLeaderboard() -- This fires a signal to another script. (Named: UpdatingLB.lua.local)
+	game:GetService("ReplicatedStorage").UpdateLeaderboard:FireAllClients(allPlayers)
+end
+
+game:GetService("Players").PlayerAdded:Connect(function(player) -- This executes once a player joins the server.
+	addPlayer(player)
+	printSummary()
+	updateLeaderboard()
+end)
+
+game:GetService("Players").PlayerRemoving:Connect(function(player) -- This executes once a player has left the server.
+	removePlayer(player)
+	updateLeaderboard()
+end)
