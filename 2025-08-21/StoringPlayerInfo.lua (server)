@@ -30,7 +30,7 @@ function printSummary() -- This outputs a list of all the players info into the 
 	end	
 end
 
-function updateLeaderboard() -- This fires a signal to another script. (Named: UpdatingLB.lua.local)
+function updateLeaderboard() -- This fires a signal to another script. (Named: UpdatingLB.lua (local))
 	game:GetService("ReplicatedStorage").UpdateLeaderboard:FireAllClients(allPlayers)
 end
 
