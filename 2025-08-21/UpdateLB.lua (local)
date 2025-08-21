@@ -1,0 +1,19 @@
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local updateEvent = replicatedStorage.UpdateLeaderboard
+
+local frame = workspace:WaitForChild("Leaderboard"):WaitForChild("SurfaceGui").Frame
+local Template = frame.Template
+
+updateEvent.OnClientEvent:Connect(function(allplayers) -- This handles the signal sent from the server
+	for _, child in ipairs(frame:GetChildren()) do
+		if child.Name == "Template" then continue end
+		child:Destroy()
+	end
+	
+	for i, p in ipairs(allplayers) do -- This creates a visual frame for the player to see.
+		local clone = Template:Clone()
+		clone.Parent = frame
+		clone.Position = UDim2.new(0.5, 0, (-0.05 + 0.1 * i), 0)
+		clone.Text = p.Name .. " - " .. p.Level
+	end
+end)
